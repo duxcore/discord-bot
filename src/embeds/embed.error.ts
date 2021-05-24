@@ -10,7 +10,7 @@ export const embedObj: EmbedObject = {
 
     embed.setTitle(vals['name'] ?? "Error")
       .setDescription(vals['message'] ?? 'An unknown error occured')
-      .setColor("red")
+      .setColor(0xff2222)
 
     return embed;
   }
