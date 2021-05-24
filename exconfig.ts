@@ -4,6 +4,6 @@
  */
 export default {
   commands: {
-    prefix: "."
+    prefix: "/"
   }
 }
