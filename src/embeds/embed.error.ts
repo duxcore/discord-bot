@@ -6,8 +6,8 @@ export const embedObj: EmbedObject = {
   getEmbed(vals) {
     const embed = new MessageEmbed();
 
-    embed.setTitle("This is a demo embed")
-         .setColor("tomato")
+    embed.setTitle("Error")
+         .setColor("red")
 
     return embed;
   }

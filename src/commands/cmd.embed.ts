@@ -10,7 +10,8 @@ const command = new CommandExecutor({
 });
 
 command.use(isAdmin, minMaxArgs(1, 1));
-command.setExecutor((client, msg, args) => {
+command.setExecutor(async (client, msg, args) => {
+  await msg.delete();
   msg.channel.send(client.embeds.get(args[0]));
 });
 

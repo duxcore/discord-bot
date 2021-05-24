@@ -7,7 +7,7 @@ export const embedObj: EmbedObject = {
     const embed = new MessageEmbed();
 
     embed.setTitle("This is a demo embed")
-         .setColor("tomato")
+         .setColor("blue")
 
     return embed;
   }
