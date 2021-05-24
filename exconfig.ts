@@ -5,5 +5,6 @@
 export default {
   commands: {
     prefix: "/"
-  }
+  },
+  rules: []
 }
