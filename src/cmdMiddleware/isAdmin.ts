@@ -1,6 +1,6 @@
 import { MiddlewareMethod } from "../structures/CommandExecutor";
 
-export const isAdmin: MiddlewareMethod = (msg, args, next) => {
+export const isAdmin: MiddlewareMethod = (client, msg, args, next) => {
   const guild = msg.client.guilds.cache.get(msg.guild?.id ?? "");
   const author = guild?.members.cache.get(msg.author.id);
 

@@ -38,7 +38,7 @@ export class Commands {
       const command = msg.content.slice(prefix.length).trim().split(" ")[0];
       if (!this.cache.has(command)) return;
 
-      this.cache.get(command)?.execute(msg);
+      this.cache.get(command)?.execute(this.client, msg);
     })
   }
 

@@ -3,6 +3,7 @@ import Discord, { Intents } from 'discord.js';
 import { Logger } from "./classes/Logger";
 import { Commands } from "./classes/Commands";
 import cfg from "../.config";
+import { EmbedManager } from "./Managers/EmbedManager";
 
 export class DuxcoreBot extends BaseBot {
 
@@ -10,6 +11,7 @@ export class DuxcoreBot extends BaseBot {
 
   public bot: Discord.Client = new Discord.Client();
   public commands: Commands = new Commands(this, cfg.commands.prefix);
+  public embeds: EmbedManager = new EmbedManager(this);
   
   private _botToken: string;
   private _startTime?: Date;
@@ -29,6 +31,7 @@ export class DuxcoreBot extends BaseBot {
   start(): Promise<DuxcoreBot> {
     return new Promise(async (resolve, reject) => {
       await this.commands.register(`${__dirname}/commands`);
+      await this.embeds.register(`${__dirname}/embeds`);
 
       this.bot.login(this._botToken).then(() => {
         resolve(this);

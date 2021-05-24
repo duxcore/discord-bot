@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
+import { DuxcoreBot } from "../Bot";
 
-export type MiddlewareMethod = (msg: Message, args: string[], next: () => void) => void;
-export type Executor = (msg: Message, args: string[]) => void;
+export type MiddlewareMethod = (client: DuxcoreBot, msg: Message, args: string[], next: () => void) => void;
+export type Executor = (client: DuxcoreBot, msg: Message, args: string[]) => void;
 export interface CommandVals {
   name: string, // What is the command name (a.k.a. What you run in discord)
   category?: string, // The category that the command is in (defaults to "default")
@@ -10,7 +11,7 @@ export interface CommandVals {
   description?: string, // What is the full length description of this command (defaults to the command name)
 }
 
-const defaultExecutor: Executor = (msg, args) => { return msg.reply("This command has no executor"); }
+const defaultExecutor: Executor = (client, msg, args) => { return msg.reply("This command has no executor"); }
 
 export default class CommandExecutor {
   
@@ -63,16 +64,16 @@ export default class CommandExecutor {
     return this;
   }
 
-  public async execute(message: Message): Promise<CommandExecutor> {
+  public async execute(client: DuxcoreBot, message: Message): Promise<CommandExecutor> {
     const args = message.content.trim().split(/ +/g);
     args.shift();
 
     let proms: Promise<void>[] = []
-    this._middlewareMethods.map(fn => proms.push(new Promise((res, _rej) => fn(message, args, res))));
+    this._middlewareMethods.map(fn => proms.push(new Promise((res, _rej) => fn(client, message, args, res))));
 
     if (proms.length > 0) await Promise.all(proms);
 
-    this._executor(message, args);
+    this._executor(client, message, args);
     return this;
   }
 

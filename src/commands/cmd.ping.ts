@@ -9,7 +9,7 @@ const command = new CommandExecutor({
 });
 
 command.use(isAdmin);
-command.setExecutor((msg, args) => {
+command.setExecutor((client, msg, args) => {
   msg.reply("Pong!");
 });
 
