@@ -6,8 +6,6 @@ export const embedObj: EmbedObject = {
   getEmbed(vals) {
     if (!vals) vals = {}
 
-    vals['uptime'] = 100000000
-
     const rawSeconds = Math.floor(vals['uptime'] / 1000)
     const rawMinutes = Math.floor(rawSeconds / 60)
     const rawHours = Math.floor(rawMinutes / 60)
