@@ -23,7 +23,7 @@ export class DuxcoreBot extends BaseBot {
 
   get uptime() {
     const current = Date.now();
-    const started = this._startTime?.getDate() ?? current;
+    const started = this._startTime?.getTime() ?? current;
 
     return ( current - started );
   }
@@ -34,6 +34,7 @@ export class DuxcoreBot extends BaseBot {
       await this.embeds.register(`${__dirname}/embeds`);
 
       this.bot.login(this._botToken).then(() => {
+        this._startTime = new Date();
         resolve(this);
         this.emit('ready', this);
         Logger.discord.auth("Successfully logged into discord as", this.bot.user?.tag);
