@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { DuxcoreBot } from "../Bot";
+import { delMsgMiddleware } from "../cmdMiddleware/deleteMessage";
 
 export type MiddlewareMethod = (client: DuxcoreBot, msg: Message, args: string[], next: () => void) => void;
 export type Executor = (client: DuxcoreBot, msg: Message, args: string[]) => void;
@@ -9,6 +10,7 @@ export interface CommandVals {
   syntax?: string, // The syntax of the command
   shortDescription?: string, // What is the short description of this command (defaults to the command name)
   description?: string, // What is the full length description of this command (defaults to the command name)
+  deleteMessage?: boolean, // Do you want to delete the original command message (defaults to false)?
 }
 
 const defaultExecutor: Executor = (client, msg, args) => { return msg.reply("This command has no executor"); }
@@ -23,6 +25,7 @@ export default class CommandExecutor {
   private _shortDesc: string;
   private _desc: string;
   private _syntax: string;
+  private _deleteMsg: boolean;
   
   constructor(vals?: CommandVals) {
     vals = vals ?? { name: "" } 
@@ -32,6 +35,9 @@ export default class CommandExecutor {
     this._desc = vals.description ?? this._name;
     this._category = vals.category ?? "default";
     this._syntax = vals.syntax ?? this._name;
+    this._deleteMsg = vals.deleteMessage ?? false;
+
+    if (this._deleteMsg) this._middlewareMethods.push(delMsgMiddleware);
   }
 
   get name(): string { return this._name; }
