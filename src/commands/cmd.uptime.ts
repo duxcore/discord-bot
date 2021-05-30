@@ -3,16 +3,19 @@ import CommandExecutor from '../structures/CommandExecutor'
 
 const command = new CommandExecutor({
   name: 'uptime',
-  category: 'misc',
   description: 'Find the uptime of the bot',
-  shortDescription: 'Uptime of the bot'
 })
 
 command.use(isAdmin)
-command.setExecutor((client, msg, args) => {
-  msg.channel.send(client.embeds.get('uptime', {
-    uptime: client.uptime
-  }))
+command.setExecutor((client, interaction, res) => {
+  const embed = client.embeds.get('uptime', {uptime: client.uptime})
+  res(interaction, {
+    type: 4,
+    data: {
+      content: '',
+      embeds: typeof(embed) !== 'string' ? [embed] : undefined
+    }
+  })
 })
 
 export default command

@@ -3,15 +3,17 @@ import CommandExecutor from "../structures/CommandExecutor";
 
 const command = new CommandExecutor({
   name: "ping",
-  category: "misc",
-  description: "A simple test command",
-  shortDescription: "A simple test command",
-  deleteMessage: true
+  description: "A simple test command"
 });
 
-command.use(isAdmin);
-command.setExecutor((client, msg, args) => {
-  msg.reply("Pong!");
+command.use(isAdmin)
+command.setExecutor((client, interaction, res) => {
+  res(interaction, {
+    type: 4,
+    data: {
+      content: 'Pong!'
+    }
+  })
 });
 
 export default command;

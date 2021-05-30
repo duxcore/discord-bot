@@ -8,6 +8,7 @@
     "dev": "ts-node app.ts"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
