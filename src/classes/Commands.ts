@@ -4,6 +4,7 @@ import { glob } from "glob";
 import { DuxcoreBot } from "../Bot";
 import CommandExecutor from "../structures/CommandExecutor";
 import { Logger } from "../classes/Logger";
+import { InteractionController } from "./InteractionController";
 
 export class Commands {
 
@@ -71,10 +72,8 @@ export class Commands {
     // @ts-ignore
     this.client.bot.ws.on('INTERACTION_CREATE', (interaction) => {
       const command = interaction.data.name
-
       if (!this.cache.has(command)) return;
-
-      this.cache.get(command)?.execute(this.client, interaction)
+      this.cache.get(command)?.execute(this.client, new InteractionController(interaction, this.client));
     })
   }
 }

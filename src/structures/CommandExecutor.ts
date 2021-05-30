@@ -1,10 +1,11 @@
 import axios from "axios";
 import { MessageEmbed } from "discord.js";
 import { DuxcoreBot } from "../Bot";
+import { InteractionController } from "../classes/InteractionController";
+import { InteractionResponse } from "../util/types/interactions";
 
-export type MiddlewareMethod = (client: DuxcoreBot, interaction: any, next: () => void, response: ResponseMethod) => void;
-export type ResponseMethod = (interaction: any, response: InteractionResponse) => Promise<void>
-export type Executor = (client: DuxcoreBot, interaction: any, res: ResponseMethod) => void;
+export type MiddlewareMethod = (client: DuxcoreBot, interaction: InteractionController, next: () => void) => void;
+export type Executor = (client: DuxcoreBot, interaction: InteractionController) => void;
 export interface CommandArgument {
   type: number,
   name: string,
@@ -18,19 +19,8 @@ export interface CommandVals {
   args?: CommandArgument[]
 }
 
-export interface InteractionResponse {
-  type: number
-  data: {
-    tts?: boolean,
-    content: string,
-    embeds?: Array<MessageEmbed>,
-    allowed_mentions?: Array<string>,
-    flags?: number // set to 64 to make the message "ephemeral"
-  }
-}
-
-const defaultExecutor: Executor = (client, interaction, res) => {
-  return res(interaction, {
+const defaultExecutor: Executor = (client, interaction) => {
+  return interaction.respond({
     type: 4,
     data: {
       content: "This command has no executor"
@@ -78,21 +68,14 @@ export default class CommandExecutor {
     this._executor = executor;
     return this;
   }
-
-  /**
-   * Respond to an interaction
-   */
-  public async respond(interaction, response: InteractionResponse) {
-    axios.post(`https://discord.com/api/v8/interactions/${interaction.id}/${interaction.token}/callback`, response)
-  }
-
-  public async execute(client: DuxcoreBot, interaction: any): Promise<CommandExecutor> {
+  
+  public async execute(client: DuxcoreBot, interaction: InteractionController): Promise<CommandExecutor> {
     let proms: Promise<void>[] = []
-    this._middlewareMethods.map(fn => proms.push(new Promise((res, _rej) => fn(client, interaction, res, this.respond))));
+    this._middlewareMethods.map(fn => proms.push(new Promise((res, _rej) => fn(client, interaction, res))));
 
     if (proms.length > 0) await Promise.all(proms);
 
-    this._executor(client, interaction, this.respond);
+    this._executor(client, interaction);
     return this;
   }
 }

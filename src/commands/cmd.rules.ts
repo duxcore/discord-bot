@@ -8,12 +8,12 @@ const command = new CommandExecutor({
 });
 
 // command.use(isAdmin);
-command.setExecutor((client, interaction, res) => {
+command.setExecutor((client, interaction) => {
   const embed = client.embeds.get('rules', {
     rules: client.cfg.rules,
     url: client.bot.user?.avatarURL() ?? ''
   })
-  res(interaction, {
+  interaction.respond({
     type: 4,
     data: {
       content: '',

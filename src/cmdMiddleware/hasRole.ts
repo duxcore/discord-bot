@@ -1,10 +1,11 @@
 import { MiddlewareMethod } from "../structures/CommandExecutor";
 
-export const hasRole = (role: string) => {
-  const mid: MiddlewareMethod =  (client, interaction, next, res) => {
-    if (interaction.member.roles.includes(role)) return next()
+export const hasRole = (...roles: string[]) => {
+  const mid: MiddlewareMethod =  (client, interaction, next) => {
+    const roleChecks = roles.map(id => interaction.member?.roles.cache.has(id));
+    if (!roleChecks.includes(false)) next();
 
-    res(interaction, {
+    interaction.respond({
       type: 4,
       data: {
         content: `You do not have the correct roles to run this command.`

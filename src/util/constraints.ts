@@ -1,0 +1,1 @@
+export const discordApiUrl = "https://discord.com/api/v8/"

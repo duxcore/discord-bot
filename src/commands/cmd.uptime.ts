@@ -7,9 +7,9 @@ const command = new CommandExecutor({
 })
 
 command.use(isAdmin)
-command.setExecutor((client, interaction, res) => {
+command.setExecutor((client, interaction) => {
   const embed = client.embeds.get('uptime', {uptime: client.uptime})
-  res(interaction, {
+  interaction.respond({
     type: 4,
     data: {
       content: '',

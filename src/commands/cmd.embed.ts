@@ -15,9 +15,9 @@ const command = new CommandExecutor({
 });
 
 command.use(isAdmin);
-command.setExecutor(async (client, interaction, res) => {
-  const args = interaction.data.options ?? []
-  if (!args[0]) return res(interaction, {
+command.setExecutor(async (client, interaction) => {
+  const args = interaction.options.map(opt => opt) ?? []
+  if (!args[0]) return interaction.respond({
     type: 4,
     data: {
       content: 'Must specify a valid embed',
@@ -27,7 +27,7 @@ command.setExecutor(async (client, interaction, res) => {
 
   const embed = client.embeds.get(args[0].value)
 
-  if (typeof embed === 'string') return res(interaction, {
+  if (typeof embed === 'string') return interaction.respond({
     type: 4,
     data: {
       content: 'Must specify a valid embed',
@@ -35,7 +35,7 @@ command.setExecutor(async (client, interaction, res) => {
     }
   })
 
-  res(interaction, {
+  interaction.respond({
     type: 4,
     data: {
       content: '',
