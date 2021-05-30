@@ -1,19 +1,42 @@
-import { Message } from "discord.js";
+import axios from "axios";
+import { MessageEmbed } from "discord.js";
 import { DuxcoreBot } from "../Bot";
-import { delMsgMiddleware } from "../cmdMiddleware/deleteMessage";
 
-export type MiddlewareMethod = (client: DuxcoreBot, msg: Message, args: string[], next: () => void) => void;
-export type Executor = (client: DuxcoreBot, msg: Message, args: string[]) => void;
+export type MiddlewareMethod = (client: DuxcoreBot, interaction: any, next: () => void, response: ResponseMethod) => void;
+export type ResponseMethod = (interaction: any, response: InteractionResponse) => Promise<void>
+export type Executor = (client: DuxcoreBot, interaction: any, res: ResponseMethod) => void;
+export interface CommandArgument {
+  type: number,
+  name: string,
+  description: string,
+  required?: boolean,
+  choices?: Array<Record<string, string | number>>
+}
 export interface CommandVals {
   name: string, // What is the command name (a.k.a. What you run in discord)
-  category?: string, // The category that the command is in (defaults to "default")
-  syntax?: string, // The syntax of the command
-  shortDescription?: string, // What is the short description of this command (defaults to the command name)
   description?: string, // What is the full length description of this command (defaults to the command name)
-  deleteMessage?: boolean, // Do you want to delete the original command message (defaults to false)?
+  args?: CommandArgument[]
 }
 
-const defaultExecutor: Executor = (client, msg, args) => { return msg.reply("This command has no executor"); }
+export interface InteractionResponse {
+  type: number
+  data: {
+    tts?: boolean,
+    content: string,
+    embeds?: Array<MessageEmbed>,
+    allowed_mentions?: Array<string>,
+    flags?: number // set to 64 to make the message "ephemeral"
+  }
+}
+
+const defaultExecutor: Executor = (client, interaction, res) => {
+  return res(interaction, {
+    type: 4,
+    data: {
+      content: "This command has no executor"
+    }
+  })
+}
 
 export default class CommandExecutor {
   
@@ -21,28 +44,19 @@ export default class CommandExecutor {
   private _executor: Executor = defaultExecutor;
   
   private _name: string;
-  private _category: string;
-  private _shortDesc: string;
   private _desc: string;
-  private _syntax: string;
-  private _deleteMsg: boolean;
+  private _args: Array<CommandArgument>;
   
   constructor(vals?: CommandVals) {
-    vals = vals ?? { name: "" } 
+    vals = vals ?? { name: "" }
 
     this._name = vals.name;
-    this._shortDesc = vals.shortDescription ?? this._name;
+    this._args = vals.args ?? []
     this._desc = vals.description ?? this._name;
-    this._category = vals.category ?? "default";
-    this._syntax = vals.syntax ?? this._name;
-    this._deleteMsg = vals.deleteMessage ?? false;
-
-    if (this._deleteMsg) this._middlewareMethods.push(delMsgMiddleware);
   }
 
   get name(): string { return this._name; }
-  get category(): string { return this._category; }
-  get shortDescription(): string { return this._shortDesc; }
+  get args(): CommandArgument[] { return this._args }
   get desciption(): string { return this._desc; }
 
   public use(...mwm: MiddlewareMethod[]): CommandExecutor {
@@ -52,11 +66,6 @@ export default class CommandExecutor {
 
   public setName(name: string): CommandExecutor {
     this._name = name;
-    return this;
-  }
-
-  public setShortDesc(shortDesc: string): CommandExecutor {
-    this._shortDesc = shortDesc;
     return this;
   }
 
@@ -70,17 +79,20 @@ export default class CommandExecutor {
     return this;
   }
 
-  public async execute(client: DuxcoreBot, message: Message): Promise<CommandExecutor> {
-    const args = message.content.trim().split(/ +/g);
-    args.shift();
+  /**
+   * Respond to an interaction
+   */
+  public async respond(interaction, response: InteractionResponse) {
+    axios.post(`https://discord.com/api/v8/interactions/${interaction.id}/${interaction.token}/callback`, response)
+  }
 
+  public async execute(client: DuxcoreBot, interaction: any): Promise<CommandExecutor> {
     let proms: Promise<void>[] = []
-    this._middlewareMethods.map(fn => proms.push(new Promise((res, _rej) => fn(client, message, args, res))));
+    this._middlewareMethods.map(fn => proms.push(new Promise((res, _rej) => fn(client, interaction, res, this.respond))));
 
     if (proms.length > 0) await Promise.all(proms);
 
-    this._executor(client, message, args);
+    this._executor(client, interaction, this.respond);
     return this;
   }
-
 }

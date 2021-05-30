@@ -1,14 +1,14 @@
 import { MiddlewareMethod } from "../structures/CommandExecutor";
 
 export const hasRole = (role: string) => {
-  const mid: MiddlewareMethod =  (client, msg, args, next) => {
-    const guild = msg.client.guilds.cache.get(msg.guild?.id ?? "");
-    const author = guild?.members.cache.get(msg.author.id);
+  const mid: MiddlewareMethod =  (client, interaction, next, res) => {
+    if (interaction.member.roles.includes(role)) return next()
 
-    if (author?.roles.cache.has(role)) return next()
-
-    msg.delete().then(() => {
-      msg.reply(`You must have the '${role}' role to run this command.`)
+    res(interaction, {
+      type: 4,
+      data: {
+        content: `You do not have the correct roles to run this command.`
+      }
     })
     return;
   }
