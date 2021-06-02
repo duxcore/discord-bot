@@ -39,7 +39,8 @@ describe('Slash Commands', () => {
           const cmd: CommandExecutor = imported.default;
 
           cmd.args.forEach(arg => {
-            expect(arg.choices?.length ?? 0).to.be.lessThanOrEqual(25)
+            if (!arg.choices) return
+            expect(arg.choices.length).to.be.lessThanOrEqual(25)
           })
         });
       })
