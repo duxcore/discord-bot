@@ -5,7 +5,7 @@
 [![Discord](https://img.shields.io/discord/844279877503025182?color=5569EB&label=discord)](https://discord.gg/X7jy2aggqC)
 [![License](https://img.shields.io/github/license/duxcore/discord-bot)](https://github.com/duxcore/discord-bot/blob/main/LICENSE)
 
-This is the repository for the official duxcore discord bot.
+This is the repository for the official Duxcore Discord bot.
 
 ## Support
 
