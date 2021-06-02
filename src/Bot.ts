@@ -44,4 +44,8 @@ export class DuxcoreBot extends BaseBot {
     })
   }
 
+  stop(event: string) {
+    this.bot.destroy()
+    Logger.base.info(`Stopped bot with event '${event}'`)
+  }
 }
