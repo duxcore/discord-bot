@@ -14,11 +14,8 @@ command.setExecutor((client, interaction) => {
     url: client.bot.user?.avatarURL() ?? ''
   })
   interaction.respond({
-    type: 4,
-    data: {
-      content: '',
-      embeds: typeof(embed) !== 'string' ? [embed] : undefined
-    }
+    content: '',
+    embeds: typeof(embed) !== 'string' ? [embed] : undefined
   })
 });
 
