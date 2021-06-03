@@ -1,5 +1,4 @@
 import { Logger } from '../classes/Logger'
-import { confirmation } from '../cmdMiddleware/confirmation'
 import { cooldown } from '../cmdMiddleware/cooldown'
 import { isAdmin } from '../cmdMiddleware/isAdmin'
 import CommandExecutor from '../structures/CommandExecutor'
@@ -10,7 +9,7 @@ const command = new CommandExecutor({
   default_permissions: true
 })
 
-command.use(isAdmin, cooldown(10000), confirmation());
+command.use(isAdmin, cooldown(10000))
 command.setExecutor((client, interaction) => {
   const embed = client.embeds.get('uptime', {uptime: client.uptime})
   interaction.respond({
