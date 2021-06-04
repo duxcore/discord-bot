@@ -3,61 +3,64 @@ import glob from 'glob'
 import CommandExecutor from '../src/structures/CommandExecutor'
 import path from 'path'
 
+let commands: CommandExecutor[] = []
+
 describe('Slash Commands', () => {
-  describe('Command Limits', () => {
-    it('Should have a maximum of 100 commands', () => {
-      glob(`./src/commands/cmd.*.ts`, (err, matches) => {
-        if (err) throw err
-
-        expect(matches.length).to.be.lessThanOrEqual(100)
-      })
-    })
-
-    it('Should have a maximum of 25 options per command', () => {
+  before(() => {
+    return new Promise((res, rej) => {
       glob(`./src/commands/cmd.*.ts`, (err, files) => {
         files.map(f => {
           f = path.join('../', f)
-          const imported = require(f);
-          const def = imported.default;
-          if (!(imported.default instanceof CommandExecutor)) return;
+          const imported = require(f)
+          if (!(imported.default instanceof CommandExecutor)) return
 
-          const cmd: CommandExecutor = imported.default;
+          commands.push(imported.default)
+        })
+        res(undefined)
+      })
+    })
+  })
 
-          expect(cmd.args.length).to.be.lessThanOrEqual(25)
-        });
+  describe('Command Limits', () => {
+    // See https://discord.com/developers/docs/interactions/slash-commands#a-quick-note-on-limits
+
+    it('Should have a maximum of 100 commands', () => {
+      expect(commands.length).to.be.lessThanOrEqual(100)
+    })
+
+    it('Should have a maximum of 25 options per command', () => {
+      commands.map(cmd => {
+        expect(cmd.args.length).to.be.lessThanOrEqual(25)
       })
     })
 
     it('Should have a maximum of 25 choices per option per command', () => {
-      glob(`./src/commands/cmd.*.ts`, (err, files) => {
-        files.map(f => {
-          f = path.join('../', f)
-          const imported = require(f);
-          const def = imported.default;
-          if (!(imported.default instanceof CommandExecutor)) return;
-
-          const cmd: CommandExecutor = imported.default;
-
-          cmd.args.forEach(arg => {
-            if (!arg.choices) return
-            expect(arg.choices.length).to.be.lessThanOrEqual(25)
-          })
-        });
+      commands.map(cmd => {
+        cmd.args.forEach(arg => {
+          if (!arg.choices) return
+          expect(arg.choices.length).to.be.lessThanOrEqual(25)
+        })
       })
     })
 
-    it('Should be lower case and match ^[\w-]{1,32}$', () => {
-      glob(`./src/commands/cmd.*.ts`, (err, files) => {
-        files.map(f => {
-          f = path.join('../', f)
-          const imported = require(f);
-          const def = imported.default;
-          if (!(imported.default instanceof CommandExecutor)) return;
+    it('Should be lower case and match \'^[\w-]{1,32}$\'', () => {
+      commands.map(cmd => {
+        expect(cmd.name).to.be.equal(cmd.name.toLowerCase()).and.to.match(/^[\w-]{1,32}$/)
+      })
+    })
 
-          const cmd: CommandExecutor = imported.default;
+    it ('Should contain a maximum of 4000 chars for combined name, desc & values per command', () => {
+      commands.map(cmd => {
+        let chars = cmd.name.length + cmd.desciption.length
+        cmd.args.forEach(arg => {
+          chars += arg.name.length + arg.description.length
+          if (!arg.choices) return
+          arg.choices.forEach(choice => {
+            chars += choice.values.toString().length
+          })
+        })
 
-          expect(cmd.name).to.be.equal(cmd.name.toLowerCase()).and.to.match(/^[\w-]{1,32}$/)
-        });
+        expect(chars).to.be.lessThanOrEqual(4000)
       })
     })
   })
