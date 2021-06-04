@@ -9,7 +9,7 @@ const command = new CommandExecutor({
   default_permissions: true
 })
 
-command.use(isAdmin, cooldown(10000))
+command.use(cooldown(10000));
 command.setExecutor((client, interaction) => {
   const embed = client.embeds.get('uptime', {uptime: client.uptime})
   interaction.respond({
