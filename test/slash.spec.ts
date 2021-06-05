@@ -30,13 +30,13 @@ describe('Slash Commands', () => {
 
     it('Should have a maximum of 25 options per command', () => {
       commands.map(cmd => {
-        expect(cmd.args.length).to.be.lessThanOrEqual(25)
+        expect(cmd.options.length).to.be.lessThanOrEqual(25)
       })
     })
 
     it('Should have a maximum of 25 choices per option per command', () => {
       commands.map(cmd => {
-        cmd.args.forEach(arg => {
+        cmd.options.forEach(arg => {
           if (!arg.choices) return
           expect(arg.choices.length).to.be.lessThanOrEqual(25)
         })
@@ -52,11 +52,11 @@ describe('Slash Commands', () => {
     it ('Should contain a maximum of 4000 chars for combined name, desc & values per command', () => {
       commands.map(cmd => {
         let chars = cmd.name.length + cmd.desciption.length
-        cmd.args.forEach(arg => {
+        cmd.options.forEach(arg => {
           chars += arg.name.length + arg.description.length
           if (!arg.choices) return
           arg.choices.forEach(choice => {
-            chars += choice.values.toString().length
+            chars += choice.value.toString().length
           })
         })
 

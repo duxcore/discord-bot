@@ -6,6 +6,9 @@ export default {
   commands: {
     prefix: "/"
   },
-  guild: '',
+  permissions: {
+    moderator: [],
+    administrator: []
+  },
   rules: []
 }

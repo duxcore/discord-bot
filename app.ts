@@ -8,8 +8,8 @@ const app = new DuxcoreBot(token);
 
 app.start();
 
-const events = ["exit", "SIGINT", "SIGUSR1", "SIGUSR2", "SIGTERM", "uncaughtException"]
+const events = ["exit", "SIGINT", "SIGUSR1", "SIGUSR2", "SIGTERM"]
 
 events.forEach(event => {
-  process.on(event, () => app.stop(event))
+  process.on(event, (e) => app.stop(e))
 })

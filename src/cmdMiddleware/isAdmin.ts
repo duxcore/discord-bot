@@ -5,9 +5,7 @@ export const isAdmin: MiddlewareMethod = (client, interaction, next) => {
   else {
       interaction.respond({
         type: 4,
-        data: {
-          content: "You must be an administrator to run this command...",
-        }
+        content: "You must be an administrator to run this command...",
       });
     return;
   }

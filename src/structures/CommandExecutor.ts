@@ -1,30 +1,19 @@
-import axios from "axios";
-import { MessageEmbed } from "discord.js";
+import { ApplicationCommandOption, ApplicationCommandPermissions, CommandInteractionController, SlashCommand, SlashCommandOptions } from "@duxcore/interactive-discord";
 import { DuxcoreBot } from "../Bot";
-import { InteractionController } from "../classes/InteractionController";
-import { InteractionResponse } from "../util/types/interactions";
 
-export type MiddlewareMethod = (client: DuxcoreBot, interaction: InteractionController, next: () => void) => void;
-export type Executor = (client: DuxcoreBot, interaction: InteractionController) => void;
-export interface CommandArgument {
-  type: number,
-  name: string,
-  description: string,
-  required?: boolean,
-  choices?: Array<Record<string, string | number>>
-}
+export type MiddlewareMethod = (client: DuxcoreBot, interaction: CommandInteractionController, next: () => void) => void;
+export type Executor = (client: DuxcoreBot, interaction: CommandInteractionController) => void;
+export type CommandOption = ApplicationCommandOption;
 export interface CommandVals {
   name: string, // What is the command name (a.k.a. What you run in discord)
   description?: string, // What is the full length description of this command (defaults to the command name)
-  args?: CommandArgument[]
+  options?: ApplicationCommandOption[],
+  permissions?: ApplicationCommandPermissions[]
 }
 
 const defaultExecutor: Executor = (client, interaction) => {
   return interaction.respond({
-    type: 4,
-    data: {
-      content: "This command has no executor"
-    }
+    content: "This command has no executor"
   })
 }
 
@@ -32,35 +21,32 @@ export default class CommandExecutor {
   
   private _middlewareMethods: MiddlewareMethod[] = [];
   private _executor: Executor = defaultExecutor;
+  private _slashCommand: SlashCommand;
   
   private _name: string;
   private _desc: string;
-  private _args: Array<CommandArgument>;
+  private _options: Array<ApplicationCommandOption>;
+  private _permissions: ApplicationCommandPermissions[];
   
-  constructor(vals?: CommandVals) {
-    vals = vals ?? { name: "" }
-
+  constructor(vals: (SlashCommandOptions)) {
     this._name = vals.name;
-    this._args = vals.args ?? []
-    this._desc = vals.description ?? this._name;
+    this._desc = vals.description
+    this._options = vals.options ?? [];
+    this._permissions = vals.permissions ?? []
+
+    const slashCommand = new SlashCommand(vals);
+    this._slashCommand = slashCommand
   }
 
   get name(): string { return this._name; }
-  get args(): CommandArgument[] { return this._args }
+  get options(): ApplicationCommandOption[] { return this._options; }
   get desciption(): string { return this._desc; }
+  get permissions(): ApplicationCommandPermissions[] { return this._permissions; }
+
+  get slashCommand(): SlashCommand { return this._slashCommand; }
 
   public use(...mwm: MiddlewareMethod[]): CommandExecutor {
     mwm.map(meth => this._middlewareMethods.push(meth));
-    return this;
-  }
-
-  public setName(name: string): CommandExecutor {
-    this._name = name;
-    return this;
-  }
-
-  public setDesc(desc: string): CommandExecutor {
-    this._desc = desc;
     return this;
   }
 
@@ -69,10 +55,9 @@ export default class CommandExecutor {
     return this;
   }
   
-  public async execute(client: DuxcoreBot, interaction: InteractionController): Promise<CommandExecutor> {
+  public async execute(client: DuxcoreBot, interaction: CommandInteractionController): Promise<CommandExecutor> {
     let proms: Promise<void>[] = []
     this._middlewareMethods.map(fn => proms.push(new Promise((res, _rej) => fn(client, interaction, res))));
-
     if (proms.length > 0) await Promise.all(proms);
 
     this._executor(client, interaction);
