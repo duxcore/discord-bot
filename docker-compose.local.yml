@@ -1,0 +1,8 @@
+version: "3"
+services:
+  app:
+    image: node:14
+    working_dir: /bot
+    volumes:
+      - ./:/bot
+    command: bash -c "yarn dev"
