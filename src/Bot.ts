@@ -2,6 +2,7 @@ import { BaseBot } from "./Base";
 import Discord, { Intents } from 'discord.js';
 import { Logger } from "./classes/Logger";
 import { Commands } from "./classes/Commands";
+import RoleManager from "./structures/RoleManager";
 import cfg from "../.config";
 import { EmbedManager } from "./Managers/EmbedManager";
 import InteractiveClient from "@duxcore/interactive-discord";
@@ -14,6 +15,7 @@ export class DuxcoreBot extends BaseBot {
   public interactions = new InteractiveClient(this.bot);
   public commands: Commands = new Commands(this, cfg.commands.prefix);
   public embeds: EmbedManager = new EmbedManager(this);
+  public roleManager: RoleManager = new RoleManager(this);
   
   private _botToken: string;
   private _startTime?: Date;
@@ -43,6 +45,10 @@ export class DuxcoreBot extends BaseBot {
       }).catch(err => {
         Logger.discord.err("Failed to authenticate with discord:", err.toString());
       });
+
+      this.bot.on('ready', () => {
+        this.roleManager.start()
+      })
     })
   }
 

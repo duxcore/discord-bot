@@ -10,7 +10,7 @@
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'"
   },
   "dependencies": {
-    "@duxcore/interactive-discord": "^1.3.7",
+    "@duxcore/interactive-discord": "^1.4.1",
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "discord.js": "^12.5.3",

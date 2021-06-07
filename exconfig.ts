@@ -10,5 +10,9 @@ export default {
     moderator: [],
     administrator: []
   },
-  rules: []
+  rules: [],
+  roles: {
+    'Role 1': { color: 'RED' },
+    'Role 2': {}
+  }
 }
