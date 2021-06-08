@@ -12,7 +12,7 @@ export default {
   },
   rules: [],
   roles: {
-    'Role 1': { color: 'RED' },
+    'Role 1': { color: 'RED', btnStyle: 1 }, // btnStyle is same as `ButtonStyle` attr
     'Role 2': {}
   }
 }

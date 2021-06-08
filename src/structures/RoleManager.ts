@@ -10,6 +10,8 @@ export default class RoleManager {
   }
 
   async start() {
+    if (Object.keys(this.client.cfg.roles).length > 25) throw Error('Too many roles! Maximum: 25')
+
     this.client.bot.guilds.cache.forEach(async guild => {
       let channel = guild.channels.cache.find(c => c.name.toLowerCase() === 'roles')
 
@@ -40,9 +42,19 @@ export default class RoleManager {
 
       if ((await channel.messages.fetch()).size !== 0) channel.messages.cache.each(msg => msg.delete())
 
-      const buttonList = Object.keys(this.client.cfg.roles).map(role => {
-        return new ComponentActionRow(new ButtonComponent({ label: role, style: ButtonStyle.Primary, custom_id: role }))
+      const buttonList: ComponentActionRow[] = []
+
+      let currentList: ButtonComponent[] = []
+
+      Object.keys(this.client.cfg.roles).forEach(role => {
+        currentList.push(new ButtonComponent({ label: role, style: this.client.cfg.roles[role].btnStyle ?? 1, custom_id: role }))
+        if (currentList.length === 5) {
+          buttonList.push(new ComponentActionRow(...currentList))
+          currentList = []
+        }
       })
+
+      if (currentList.length !== 0) buttonList.push(new ComponentActionRow(...currentList))
 
       const cluster = new ComponentCluster(...buttonList)
 
