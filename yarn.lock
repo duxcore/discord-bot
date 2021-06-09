@@ -16,10 +16,10 @@
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-"@duxcore/interactive-discord@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@duxcore/interactive-discord/-/interactive-discord-1.4.1.tgz#845e6e7f8c8163886e0be807d2b7c1bc41a4125f"
-  integrity sha512-r+HZtM1bPisPx2DKQR4TRNzWp8uiEBJwKpuzCSIjNMnukHsZ4WkEeVwoY015xwDvkKoA95y5kuaq1nGprqaZDQ==
+"@duxcore/interactive-discord@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@duxcore/interactive-discord/-/interactive-discord-1.4.2.tgz#93d2a512feb730f04cd6c039a4fa9ddd8c410751"
+  integrity sha512-3Y2uPnbRRdt9zMTrZbND2AON6GJCruvD3aSlOhuqNtYj5MrOppjPWY1d94O4fitHs0tkZEmlb1NTz0LZQ6ZOfg==
   dependencies:
     axios "^0.21.1"
     discord.js "12.5.2"
