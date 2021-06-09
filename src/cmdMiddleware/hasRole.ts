@@ -7,7 +7,8 @@ export const hasRole = (...roles: string[]) => {
 
     interaction.respond({
       type: 4,
-      content: `You do not have the correct roles to run this command.`
+      content: `You do not have the correct roles to run this command.`,
+      isPrivate: true
     })
     return;
   }
