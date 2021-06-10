@@ -6,14 +6,12 @@
   </h1>
 </span>
 
-This is the repository for the official Duxcore Discord bot.
+This is the repository for the official Duxcore discord bot.
 
 ## Support
-
 If you are having problems with the bot, open an [issue](https://github.com/duxcore/discord-bot/issues) describing your problem.
 
 ## Contributing
-
 See our [contributing](https://github.com/duxcore/discord-bot/blob/main/CONTRIBUTING.md) guide for more information.
 
 ## License
