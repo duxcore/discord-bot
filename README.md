@@ -17,4 +17,3 @@ See our [contributing](https://github.com/duxcore/discord-bot/blob/main/CONTRIBU
 ## License
 
 [GPL-3.0](https://github.com/duxcore/discord-bot/blob/main/LICENSE)
-
