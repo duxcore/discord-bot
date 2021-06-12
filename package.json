@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@duxcore/interactive-discord": "^1.4.2",
+    "@duxcore/interactive-discord": "^1.4.4",
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
     "discord.js": "^12.5.3",

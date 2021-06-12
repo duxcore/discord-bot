@@ -1,5 +1,5 @@
 import { ButtonComponent, ButtonStyle, ComponentActionRow, ComponentCluster } from "@duxcore/interactive-discord"
-import { GuildMember } from "discord.js"
+import { GuildMember, TextChannel } from "discord.js"
 import { DuxcoreBot } from "../Bot"
 
 export default class RoleManager {
@@ -40,7 +40,22 @@ export default class RoleManager {
         }
       })
 
-      if ((await channel.messages.fetch()).size !== 0) channel.messages.cache.each(msg => msg.delete())
+      let postNewRoles = false
+
+      if ((await channel.messages.fetch()).size !== 0) {
+        channel.messages.cache.each(async msg => {
+          const message = await this.client.interactions.fetchMessage({channel: channel as TextChannel, messageId: msg.id})
+          const listOfRoles = []
+          // @ts-ignore
+          message.components[0].components.forEach(component => {
+            // @ts-ignore
+            listOfRoles.push(component.label)
+          })
+          if (!Object.keys(this.client.cfg.roles).every((val, index) => val === listOfRoles[index])) postNewRoles = true
+        })
+      }
+
+      if (!postNewRoles) return
 
       const buttonList: ComponentActionRow[] = []
 
