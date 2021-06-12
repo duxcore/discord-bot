@@ -16,7 +16,7 @@ export class DuxcoreBot extends BaseBot {
   public commands: Commands = new Commands(this, cfg.commands.prefix);
   public embeds: EmbedManager = new EmbedManager(this);
   public roleManager: RoleManager = new RoleManager(this);
-  
+
   private _botToken: string;
   private _startTime?: Date;
 
@@ -29,14 +29,14 @@ export class DuxcoreBot extends BaseBot {
     const current = Date.now();
     const started = this._startTime?.getTime() ?? current;
 
-    return ( current - started );
+    return (current - started);
   }
 
   start(): Promise<DuxcoreBot> {
     return new Promise(async (resolve, reject) => {
       await this.embeds.register(`${__dirname}/embeds`);
 
-      this.bot.login(this._botToken).then(async() => {
+      this.bot.login(this._botToken).then(async () => {
         await this.commands.register(`${__dirname}/commands`);
         this._startTime = new Date();
         resolve(this);
