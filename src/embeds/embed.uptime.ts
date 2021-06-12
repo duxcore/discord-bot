@@ -17,7 +17,7 @@ export const embedObj: EmbedObject = {
 
     const embed = new MessageEmbed()
 
-    embed.setTitle('Bot Uptime.')
+    embed.setTitle('Bot Uptime')
       .setFooter(`${days ? `${days} days, ` : ''}${hours ? `${hours} hours, ` : ''}${minutes ? `${minutes} minutes, ` : ''}${seconds} seconds`)
       .setColor(0xff2222)
 
