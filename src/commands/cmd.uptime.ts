@@ -11,10 +11,10 @@ const command = new CommandExecutor({
 
 command.use(cooldown(10000));
 command.setExecutor((client, interaction) => {
-  const embed = client.embeds.get('uptime', {uptime: client.uptime})
+  const embed = client.embeds.get('uptime', { uptime: client.uptime })
   interaction.respond({
     content: '',
-    embeds: typeof(embed) !== 'string' ? [embed] : undefined
+    embeds: typeof (embed) !== 'string' ? [embed] : undefined
   }).catch(console.error);
 })
 

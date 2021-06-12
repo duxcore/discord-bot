@@ -9,7 +9,7 @@ export const embedObj: EmbedObject = {
     const rawSeconds = Math.floor(vals['uptime'] / 1000)
     const rawMinutes = Math.floor(rawSeconds / 60)
     const rawHours = Math.floor(rawMinutes / 60)
-    
+
     const seconds = rawSeconds % 60
     const minutes = rawMinutes % 60
     const hours = rawHours % 24
@@ -17,7 +17,7 @@ export const embedObj: EmbedObject = {
 
     const embed = new MessageEmbed()
 
-    embed.setTitle('Bot Uptime')
+    embed.setTitle('Bot Uptime yes')
       .setFooter(`${days ? `${days} days, ` : ''}${hours ? `${hours} hours, ` : ''}${minutes ? `${minutes} minutes, ` : ''}${seconds} seconds bruh`)
       .setColor(0xff2222)
 
