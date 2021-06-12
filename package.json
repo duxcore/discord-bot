@@ -1,6 +1,6 @@
 {
   "name": "duxcore-discord-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": "https://github.com/duxcore/DiscordBot.git",
   "license": "GPL-3.0-or-later",
