@@ -1,4 +1,4 @@
-import { ButtonComponent, ButtonStyle, ComponentActionRow, ComponentCluster } from "@duxcore/interactive-discord"
+import { ButtonComponent, ButtonStyle, ComponentActionRow, ComponentCluster, ComponentType } from "@duxcore/interactive-discord"
 import { GuildMember, TextChannel } from "discord.js"
 import { DuxcoreBot } from "../Bot"
 
@@ -34,9 +34,9 @@ export default class RoleManager {
           user: interaction.raw.member.user
         }, guild)
         if ((await user.fetch(true)).roles.cache.find(r => r.name === interaction.customId)) {
-          user.roles.remove(role).then(() => interaction.respond({content: `Removed role: '${role}'`, isPrivate: true}))
+          user.roles.remove(role).then(() => interaction.respond({ content: `Removed role: '${role}'`, isPrivate: true }))
         } else {
-          user.roles.add(role).then(() => interaction.respond({content: `Received role: '${role}'`, isPrivate: true}))
+          user.roles.add(role).then(() => interaction.respond({ content: `Received role: '${role}'`, isPrivate: true }))
         }
       })
 
@@ -44,12 +44,12 @@ export default class RoleManager {
 
       if ((await channel.messages.fetch()).size !== 0) {
         channel.messages.cache.each(async msg => {
-          const message = await this.client.interactions.fetchMessage({channel: channel as TextChannel, messageId: msg.id})
-          const listOfRoles = []
-          // @ts-ignore
+          const message = await this.client.interactions.fetchMessage({ channel: channel as TextChannel, messageId: msg.id })
+          const listOfRoles: string[] = []
           message.components[0].components.forEach(component => {
-            // @ts-ignore
-            listOfRoles.push(component.label)
+            if (component.type == ComponentType.Button) {
+              listOfRoles.push(component.label || "")
+            }
           })
           if (!Object.keys(this.client.cfg.roles).every((val, index) => val === listOfRoles[index])) postNewRoles = true
         })
@@ -81,7 +81,7 @@ export default class RoleManager {
 
       Object.keys(this.client.cfg.roles).forEach(async role => {
         if ((await guild.roles.fetch()).cache.find(r => r.name === role)) return
-        guild.roles.create({ data: {name: role, color: this.client.cfg.roles[role]?.color} })
+        guild.roles.create({ data: { name: role, color: this.client.cfg.roles[role]?.color } })
       })
     })
   }
