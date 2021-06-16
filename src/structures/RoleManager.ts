@@ -30,14 +30,29 @@ export default class RoleManager {
       this.client.interactions.on('buttonInteraction', async interaction => {
         const role = guild.roles.cache.find(r => r.name === interaction.customId)
         if (!role) return
-        const user = new GuildMember(this.client.bot, {
-          user: interaction.raw.member.user
-        }, guild)
-        if ((await user.fetch(true)).roles.cache.find(r => r.name === interaction.customId)) {
-          user.roles.remove(role).then(() => interaction.respond({ content: `Removed role: '${role}'`, isPrivate: true }))
+        if (!interaction.member) return
+        const user = await guild.members.fetch(interaction.member)
+        if (user.roles.cache.find(r => r.name === interaction.customId)) {
+          await user.roles.remove(role).then(() => interaction.respond({ content: `Removed role: '${role}'`, isPrivate: true }))
         } else {
-          user.roles.add(role).then(() => interaction.respond({ content: `Received role: '${role}'`, isPrivate: true }))
+          await user.roles.add(role).then(() => interaction.respond({ content: `Received role: '${role}'`, isPrivate: true }))
         }
+
+        let shouldDivide = false;
+        Object.keys(this.client.cfg.roles).forEach(async (name) => {
+          const cosmeticrole = guild.roles.cache.find(ro => ro.name === name)
+          if (!cosmeticrole) return
+          if (user.roles.cache.has(cosmeticrole.id)) shouldDivide = true;
+        })
+        this.client.cfg.dividerRoles.forEach(async (id) => {
+          const div = await guild.roles.fetch(id)
+          if (!div) return
+          if (shouldDivide) {
+            if (!user.roles.cache.find(r => r.id === id)) user.roles.add(div);
+            return
+          }
+          if (user.roles.cache.find(r => r.id === id)) user.roles.remove(div);
+        })
       })
 
       let postNewRoles = false
@@ -53,6 +68,8 @@ export default class RoleManager {
           })
           if (!Object.keys(this.client.cfg.roles).every((val, index) => val === listOfRoles[index])) postNewRoles = true
         })
+      } else {
+        postNewRoles = true;
       }
 
       if (!postNewRoles) return
