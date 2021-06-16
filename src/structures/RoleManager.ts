@@ -1,5 +1,5 @@
 import { ButtonComponent, ButtonStyle, ComponentActionRow, ComponentCluster, ComponentType } from "@duxcore/interactive-discord"
-import { GuildMember, TextChannel } from "discord.js"
+import { TextChannel } from "discord.js"
 import { DuxcoreBot } from "../Bot"
 
 export default class RoleManager {
@@ -37,22 +37,6 @@ export default class RoleManager {
         } else {
           await user.roles.add(role).then(() => interaction.respond({ content: `Received role: '${role}'`, isPrivate: true }))
         }
-
-        let shouldDivide = false;
-        Object.keys(this.client.cfg.roles).forEach(async (name) => {
-          const cosmeticrole = guild.roles.cache.find(ro => ro.name === name)
-          if (!cosmeticrole) return
-          if (user.roles.cache.has(cosmeticrole.id)) shouldDivide = true;
-        })
-        this.client.cfg.dividerRoles.forEach(async (id) => {
-          const div = await guild.roles.fetch(id)
-          if (!div) return
-          if (shouldDivide) {
-            if (!user.roles.cache.find(r => r.id === id)) user.roles.add(div);
-            return
-          }
-          if (user.roles.cache.find(r => r.id === id)) user.roles.remove(div);
-        })
       })
 
       let postNewRoles = false
@@ -79,7 +63,7 @@ export default class RoleManager {
       let currentList: ButtonComponent[] = []
 
       Object.keys(this.client.cfg.roles).forEach(role => {
-        currentList.push(new ButtonComponent({ label: role, style: this.client.cfg.roles[role].btnStyle ?? 1, custom_id: role }))
+        currentList.push(new ButtonComponent({ label: role, style: this.client.cfg.roles[role].btnStyle ?? ButtonStyle.Primary, custom_id: role }))
         if (currentList.length === 5) {
           buttonList.push(new ComponentActionRow(...currentList))
           currentList = []

@@ -14,8 +14,5 @@ export default {
   roles: {
     'Role 1': { color: 'RED', btnStyle: 1 }, // btnStyle is same as `ButtonStyle` attr
     'Role 2': {}
-  },
-  dividerRoles: [
-        'START_ROLE_ID', 'END_ROLE_ID'
-  ]
+  }
 }
