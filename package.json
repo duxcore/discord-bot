@@ -8,7 +8,8 @@
     "dev": "nodemon --exec ts-node app.ts",
     "start": "node dist/app.js",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
   "dependencies": {
     "@duxcore/interactive-discord": "^1.4.6",
