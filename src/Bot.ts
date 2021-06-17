@@ -1,5 +1,5 @@
 import { BaseBot } from "./Base";
-import Discord, { Intents } from 'discord.js';
+import Discord, { ActivityType } from 'discord.js';
 import { Logger } from "./classes/Logger";
 import { Commands } from "./classes/Commands";
 import RoleManager from "./structures/RoleManager";
@@ -48,6 +48,8 @@ export class DuxcoreBot extends BaseBot {
 
       this.bot.on('ready', () => {
         this.roleManager.start()
+
+        this.setStatus('Duxcore', 'WATCHING')
       })
     })
   }
@@ -56,5 +58,18 @@ export class DuxcoreBot extends BaseBot {
     this.bot.destroy()
     Logger.base.info(`Stopped bot with event '${event}'`);
     ///throw event;
+  }
+
+  /**
+   * Set the status of the bot.
+   */
+  setStatus(activity: string, type: ActivityType, url?: string) {
+    this.bot.user?.setPresence({
+      activity: {
+        name: activity,
+        type: type,
+        url: url
+      }
+    })
   }
 }
