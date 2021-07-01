@@ -6,6 +6,7 @@ import RoleManager from "./structures/RoleManager";
 import cfg from "../.config";
 import { EmbedManager } from "./Managers/EmbedManager";
 import InteractiveClient from "@duxcore/interactive-discord";
+import { QuestionManager } from "./Managers/QuestionManager";
 
 export class DuxcoreBot extends BaseBot {
 
@@ -16,6 +17,7 @@ export class DuxcoreBot extends BaseBot {
   public commands: Commands = new Commands(this, cfg.commands.prefix);
   public embeds: EmbedManager = new EmbedManager(this);
   public roleManager: RoleManager = new RoleManager(this);
+  public questionManager: QuestionManager = new QuestionManager(this)
 
   private _botToken: string;
   private _startTime?: Date;

@@ -6,6 +6,15 @@ export default {
     commands: {
         prefix: "/"
     },
+    qotd: {
+        askEvery: 86400000, // in seconds
+        askAt: {
+            hours: 24,
+            minutes: 0,
+            seconds: 0,
+            milliseconds: 0
+        }
+    },
     permissions: {
         moderator: [],
         administrator: []
