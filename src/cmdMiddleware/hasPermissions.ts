@@ -4,7 +4,9 @@ import { MiddlewareMethod } from "../structures/CommandExecutor";
 export const hasPermission = (...roles: PermissionResolvable[]) => {
   const mid: MiddlewareMethod =  (client, interaction, next) => {
     const checks = roles.map(id => interaction.member?.hasPermission(id));
-    if (!checks.includes(false)) next();
+    if (!checks.includes(false)) return next();
+
+    if (interaction.member?.hasPermission('ADMINISTRATOR')) return next();
 
     interaction.respond({
       type: 4,
