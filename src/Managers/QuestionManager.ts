@@ -25,6 +25,10 @@ export class QuestionManager {
     return this.questions
   }
 
+  clear() {
+    this.questions = []
+  }
+
   post() {
     this.client.bot.guilds.cache.forEach(guild => {
       const channel = guild.channels.cache.find(ch => ch.name === 'question-of-the-day')
