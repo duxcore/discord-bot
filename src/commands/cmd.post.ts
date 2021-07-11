@@ -1,3 +1,4 @@
+import { TextChannel } from "discord.js";
 import { hasPermission } from "../cmdMiddleware/hasPermissions";
 import CommandExecutor from "../structures/CommandExecutor";
 
@@ -18,12 +19,7 @@ command.setExecutor(async (client, interaction) => {
   const args = interaction.raw.data.options?.map(opt => opt) ?? []
   const channel = await client.bot.channels.fetch(args[0].value)
   if (!channel.isText()) return
-  const question = client.questionManager.getQuestion()
-  if (!question) return
-  channel.send({
-    content: `QOTD: ${question}`
-  })
-  client.questionManager.askQuestion(args[0].value)
+  client.questionManager.post(channel as TextChannel)
   interaction.respond({
     content: 'Question posted to channel',
     isPrivate: true

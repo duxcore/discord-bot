@@ -1,3 +1,4 @@
+import { TextChannel } from "discord.js"
 import { DuxcoreBot } from "../Bot"
 
 export class QuestionManager {
@@ -29,14 +30,15 @@ export class QuestionManager {
     this.questions = []
   }
 
-  post() {
+  post(channel?: TextChannel) {
     this.client.bot.guilds.cache.forEach(guild => {
-      const channel = guild.channels.cache.find(ch => ch.name === 'question-of-the-day')
-      if (!channel?.isText()) return
+      if (!channel) channel = guild.channels.cache.find(ch => ch.name === 'question-of-the-day') as TextChannel
       const question = this.getQuestion()
       if (!question) return
+      const embed = this.client.embeds.get('qotd', {qotd: question})
+      if (typeof embed === 'string') return
       channel.send({
-        content: `QOTD: ${question}`
+        embed
       })
     })
   }
