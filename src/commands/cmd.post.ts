@@ -17,7 +17,8 @@ const command = new CommandExecutor({
 command.use(hasPermission('MANAGE_MESSAGES'))
 command.setExecutor(async (client, interaction) => {
   const args = interaction.raw.data.options?.map(opt => opt) ?? []
-  const channel = await client.bot.channels.fetch(args[0].value)
+  var channel = interaction.channel
+  if (args[0].value) channel = await client.bot.channels.fetch(args[0].value) as TextChannel
   if (!channel.isText()) return
   client.questionManager.post(channel as TextChannel)
   interaction.respond({
