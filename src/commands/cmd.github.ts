@@ -26,7 +26,7 @@ command.setExecutor(async (client, interaction) => {
   let res
 
   try {
-    res = await axios.get(`https://api.github.com/repos/HoloPanio/duxcore/issues/${args[0].value}`)
+    res = await axios.get(`https://api.github.com/repos/duxcore/duxcore/issues/${args[0].value}`)
   } catch (err) {
     res = err
   }
@@ -40,7 +40,7 @@ command.setExecutor(async (client, interaction) => {
   }
 
   try {
-    if (res.data.pull_request) res = await axios.get(`https://api.github.com/repos/HoloPanio/duxcore/pulls/${args[0].value}`)
+    if (res.data.pull_request) res = await axios.get(`https://api.github.com/repos/duxcore/duxcore/pulls/${args[0].value}`)
   } catch (err) {
     res = err
   }
