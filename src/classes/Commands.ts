@@ -30,16 +30,29 @@ export class Commands {
           this.cache.set(cmd.name, cmd);
 
           return cmd;
-      });
+        });
 
-      const globalCommands = pendingCmds.map(cmd => cmd?.slashCommand) as SlashCommand[];
-      
-      this.client.interactions.commands.bulkRegister(globalCommands)
-      .then(() => Logger.discord.log("Successfully registered", globalCommands.length, "global commands!"))
-      .catch(err => Logger.discord.err("Failed to register the global command(s) with error", err.message));
+        const globalCommands = pendingCmds.map(cmd => cmd?.slashCommand) as SlashCommand[];
+        await this.deleteOld(globalCommands)
+
+        this.client.interactions.commands.bulkRegister(globalCommands)
+          .then(() => Logger.discord.log("Successfully registered", globalCommands.length, "global commands!"))
+          .catch(err => Logger.discord.err("Failed to register the global command(s) with error", err.message));
       });
       resolve(this);
     });
+  }
+
+  private async deleteOld(currentCommands: SlashCommand[]) {
+    const currentCommandNames = currentCommands.map((cmd) => cmd.name);
+    const oldCommands = await this.client.interactions.commands.getAll();
+
+    let deletedNumber = 0;
+    oldCommands.forEach(command => {
+      if (!currentCommandNames.includes(command.name)) deletedNumber += 1; this.client.interactions.commands.delete(command.id);
+    });
+
+    if (deletedNumber > 0) Logger.discord.log(`Successfully deleted ${deletedNumber} unused command(s)`);
   }
 
   private startListener(prefix: string) {
