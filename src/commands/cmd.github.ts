@@ -4,13 +4,41 @@ import CommandExecutor from "../structures/CommandExecutor"
 
 const command = new CommandExecutor({
   name: "github",
-  description: "Fetch a github issue/pr",
+  description: "Fetch a github issue/pr from a Duxcore repository",
   options: [
     {
       name: 'number',
       type: 4, // int
       description: 'GitHub issue/pr id',
       required: true
+    },
+    {
+      name: 'repo',
+      type: 3, // string
+      description: 'Duxcore GitHub repo',
+      required: false,
+      choices: [
+        {
+          name: 'Duxcore',
+          value: 'duxcore'
+        },
+        {
+          name: 'Trixi',
+          value: 'trixi'
+        },
+        {
+          name: 'Eventra',
+          value: 'eventra'
+        },
+        {
+          name: 'Discord Bot',
+          value: 'discord-bot'
+        },
+        {
+          name: 'Interactive Discord',
+          value: 'interactive-discord'
+        }
+      ]
     }
   ]
 })
@@ -23,10 +51,12 @@ command.setExecutor(async (client, interaction) => {
       isPrivate: true
   })
 
+  if (!args[1]) args[1] = { value: 'duxcore', type: 3, name: 'repo' }
+
   let res
 
   try {
-    res = await axios.get(`https://api.github.com/repos/duxcore/duxcore/issues/${args[0].value}`)
+    res = await axios.get(`https://api.github.com/repos/duxcore/${args[1].value}/issues/${args[0].value}`)
   } catch (err) {
     res = err
   }
@@ -40,7 +70,7 @@ command.setExecutor(async (client, interaction) => {
   }
 
   try {
-    if (res.data.pull_request) res = await axios.get(`https://api.github.com/repos/duxcore/duxcore/pulls/${args[0].value}`)
+    if (res.data.pull_request) res = await axios.get(`https://api.github.com/repos/duxcore/${args[1].value}/pulls/${args[0].value}`)
   } catch (err) {
     res = err
   }
