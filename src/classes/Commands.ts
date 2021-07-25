@@ -49,7 +49,10 @@ export class Commands {
 
     let deletedNumber = 0;
     oldCommands.forEach(command => {
-      if (!currentCommandNames.includes(command.name)) deletedNumber += 1; this.client.interactions.commands.delete(command.id);
+      if (!currentCommandNames.includes(command.name)) {
+        deletedNumber += 1;
+        this.client.interactions.commands.delete(command.id);
+      }
     });
 
     if (deletedNumber > 0) Logger.discord.log(`Successfully deleted ${deletedNumber} unused command(s)`);
