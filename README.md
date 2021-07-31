@@ -1,10 +1,10 @@
-<span align="center">
+<div align="center">
   <h1>
     Duxcore Discord Bot<br>
     <a href="https://discord.gg/X7jy2aggqC"><img src="https://img.shields.io/discord/844279877503025182?color=5569EB&label=discord&style=for-the-badge" /></a>
     <a href="https://github.com/duxcore/discord-bot/blob/main/LICENSE"><img src="https://img.shields.io/github/license/duxcore/discord-bot?style=for-the-badge" /></a>
   </h1>
-</span>
+</div>
 
 This is the repository for the official Duxcore discord bot.
 
