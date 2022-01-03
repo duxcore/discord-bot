@@ -43,7 +43,7 @@ export class DuxcoreBot extends BaseBot {
         this._startTime = new Date();
         resolve(this);
         this.emit('ready', this);
-        Logger.discord.auth("Successfully logged into discord as", this.bot.user?.tag);
+        Logger.discord.auth("Successfully logged into discord as", this.bot.user?.tag || '');
       }).catch(err => {
         Logger.discord.err("Failed to authenticate with discord:", err.toString());
       });

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@duxcore/interactive-discord": "^1.4.6",
+    "@lvksh/logger": "^1.5.2",
     "@types/chai": "^4.2.18",
     "@types/chalk": "^2.2.0",
     "@types/dotenv": "^8.2.0",
@@ -21,7 +22,7 @@
     "@types/moment": "^2.13.0",
     "@types/node": "^15.6.0",
     "axios": "^0.21.1",
-    "chalk": "^4.1.1",
+    "chalk": "4",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
     "glob": "^7.1.7",
